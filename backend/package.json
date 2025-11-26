@@ -24,7 +24,7 @@
     "multer": "^2.0.2",
     "nodemailer": "^6.9.13",
     "ollama": "^0.6.3",
-    "pdf-parse": "1.1.1",
+    "pdf-parse": "^2.4.5",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
