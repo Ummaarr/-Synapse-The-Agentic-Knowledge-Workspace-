@@ -51,7 +51,8 @@ export default function ChatPanel() {
   }, [messages]);
 
   const openSSE = (id: string) => {
-    const url = `http://localhost:5000/api/agent/stream?reqId=${id}`;
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = `${API_URL}/api/agent/stream?reqId=${id}`;
     if (evtRef.current) {
       evtRef.current.close();
       evtRef.current = null;
@@ -380,7 +381,8 @@ export default function ChatPanel() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:5000/api/upload", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const response = await fetch(`${API_URL}/api/upload`, {
         method: "POST",
         body: formData,
       });
@@ -466,7 +468,8 @@ export default function ChatPanel() {
     try {
       console.log(`[Frontend] Sending request to /api/agent/run with reqId: ${id}`);
 
-      const resp = await fetch(`http://localhost:5000/api/agent/run?reqId=${id}`, {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const resp = await fetch(`${API_URL}/api/agent/run?reqId=${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -567,7 +570,8 @@ export default function ChatPanel() {
   const handleSendEmail = async () => {
     if (!lastOfferHtml) return alert("No offer generated yet.");
 
-    const res = await fetch("http://localhost:5000/api/email/send", {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const res = await fetch(`${API_URL}/api/email/send`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

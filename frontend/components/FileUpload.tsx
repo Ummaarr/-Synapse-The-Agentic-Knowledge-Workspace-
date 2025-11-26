@@ -38,7 +38,8 @@ export default function FileUpload() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:5000/api/upload", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const response = await fetch(`${API_URL}/api/upload`, {
         method: "POST",
         body: formData,
       });
@@ -46,10 +47,10 @@ export default function FileUpload() {
       const data = await response.json();
 
       if (response.ok) {
-        const message = data.processing 
+        const message = data.processing
           ? `File uploaded! Processing ${data.chunks} chunks in background...`
           : `File uploaded successfully! Processed ${data.chunks} chunks.`;
-        
+
         setUploadStatus({
           success: true,
           message: message
@@ -87,7 +88,7 @@ export default function FileUpload() {
         onChange={handleFileSelect}
         className="hidden"
       />
-      
+
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
@@ -102,11 +103,10 @@ export default function FileUpload() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`p-3 rounded-md text-sm ${
-            uploadStatus.success
+          className={`p-3 rounded-md text-sm ${uploadStatus.success
               ? "bg-green-50 dark:bg-green-900/30 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-800"
               : "bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-800"
-          }`}
+            }`}
         >
           {uploadStatus.message}
         </motion.div>
