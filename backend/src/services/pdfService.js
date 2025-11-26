@@ -1,19 +1,27 @@
 import fs from "fs/promises";
-import { PDFParse } from "pdf-parse";
+import pdf from "pdf-parse";
 
 const extractWithPages = async (filePath) => {
   const buffer = await fs.readFile(filePath);
-  const parser = new PDFParse({ data: buffer });
-  const parsed = await parser.getText();
-  await parser.destroy();
 
-  const text = parsed.text || "";
-  // If pages array is not provided, split by form feed fallback
-  const pages = (parsed.pages && parsed.pages.length)
-    ? parsed.pages.map(page => page.text?.trim?.() ?? "").filter(Boolean)
-    : text.split("\f").map(p => p.trim()).filter(Boolean);
+  try {
+    const data = await pdf(buffer);
+    const text = data.text || "";
 
-  return { pages, text };
+    // Attempt to split by form feed for pages, or just return the whole text as one page if not found
+    // pdf-parse doesn't always preserve form feeds, but it's the best we have with this library version
+    const pages = text.split(/\f/).map(p => p.trim()).filter(Boolean);
+
+    // If splitting didn't produce multiple pages, treat as single page
+    if (pages.length === 0 && text.trim()) {
+      pages.push(text.trim());
+    }
+
+    return { pages, text };
+  } catch (err) {
+    console.error("PDF Parsing Error:", err);
+    throw err;
+  }
 };
 
 export default { extractWithPages };
