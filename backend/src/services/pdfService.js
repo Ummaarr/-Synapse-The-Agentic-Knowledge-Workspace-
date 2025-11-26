@@ -1,5 +1,7 @@
 import fs from "fs/promises";
-import pdf from "pdf-parse";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pdf = require("pdf-parse");
 
 const extractWithPages = async (filePath) => {
   const buffer = await fs.readFile(filePath);
