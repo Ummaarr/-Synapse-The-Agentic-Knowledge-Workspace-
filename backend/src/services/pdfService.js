@@ -4,10 +4,14 @@ const require = createRequire(import.meta.url);
 const pdf = require("pdf-parse");
 
 const extractWithPages = async (filePath) => {
-  const buffer = await fs.readFile(filePath);
-
+  console.log(`[PDF Service] Reading file: ${filePath}`);
   try {
+    const buffer = await fs.readFile(filePath);
+    console.log(`[PDF Service] File read, buffer size: ${buffer.length}`);
+
     const data = await pdf(buffer);
+    console.log(`[PDF Service] PDF parsed, text length: ${data.text?.length}`);
+
     const text = data.text || "";
 
     // Attempt to split by form feed for pages, or just return the whole text as one page if not found
@@ -21,7 +25,7 @@ const extractWithPages = async (filePath) => {
 
     return { pages, text };
   } catch (err) {
-    console.error("PDF Parsing Error:", err);
+    console.error(`[PDF Service] Error processing ${filePath}:`, err);
     throw err;
   }
 };

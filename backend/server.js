@@ -6,6 +6,15 @@ dotenv.config({
   path: path.resolve(process.cwd(), ".env"),
 });
 
+import fs from "fs";
+
+// Ensure uploads directory exists
+const uploadDir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+  console.log("Created uploads directory");
+}
+
 console.log("Loaded MONGO_URI:", process.env.MONGO_URI);
 
 import app from "./src/app.js";
